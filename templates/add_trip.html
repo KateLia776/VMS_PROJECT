@@ -1,0 +1,96 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% if trip %}Edit Trip{% else %}Add Trip{% endif %}</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 20px;
+        }
+        .container {
+            max-width: 500px;
+            margin: auto;
+            padding: 20px;
+            border-radius: 10px;
+            background: #ecf0f1;
+            box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
+        }
+        .container h2 {
+            text-align: center;
+        }
+        input, select, button {
+            width: 100%;
+            padding: 8px;
+            margin: 5px 0;
+        }
+        button {
+            background-color: #27ae60;
+            color: white;
+            border: none;
+            cursor: pointer;
+            font-size: 16px;
+            border-radius: 5px;
+        }
+        button:hover {
+            background-color: #219150;
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <h2>{% if trip %}Edit Trip{% else %}Add a New Trip{% endif %}</h2>
+    <form method="POST">
+        {% csrf_token %}
+        
+        <!-- Vehicle Selection -->
+        <label for="vehicle">Vehicle:</label>
+                <select id="vehicle_vin" name="vehicle_vin" required>
+                    {% for vehicle in vehicles %}
+                        <option value="{{ vehicle.VIN }}" {% if trip and trip.vehicle_vin.VIN == vehicle.VIN %}selected{% endif %}>{{ vehicle.vehicle_make_model }} ({{ vehicle.plate_number }})</option>
+                    {% endfor %}
+                </select>
+
+        <!-- Driver Selection -->
+        <label for="driver">Select Driver:</label>
+        <select id="driver_id" name="driver_id" required>
+            <option value="">Select...</option>
+            {% for driver in drivers %}
+                <option value="{{ driver.id }}" {% if trip and trip.driver_id.id == driver.id %}selected{% endif %}>{{ driver.name }} {{ driver.lastname }}</option>
+            {% endfor %}
+        </select>
+
+        <label for="start_date">Start Date:</label>
+        <input type="date" name="start_date" value="{{ trip.start_date|date:'Y-m-d' }}" required>
+
+        <label for="end_date">End Date:</label>
+        <input type="date" name="end_date" value="{{ trip.end_date|date:'Y-m-d' }}" required>
+
+        <label for="from_location">From:</label>
+        <input type="text" name="from_location" value="{{ trip.from_location|default:'' }}" required>
+
+        <label for="to_location">To:</label>
+        <input type="text" name="to_location" value="{{ trip.to_location|default:'' }}" required>
+
+        <label for="start_mileage">Start Mileage:</label>
+        <input type="number" name="start_mileage" value="{{ trip.start_mileage|default:'' }}" required>
+
+        <label for="end_mileage">End Mileage:</label>
+        <input type="number" name="end_mileage" value="{{ trip.end_mileage|default:'' }}">
+
+        <label for="start_time">Start Time:</label>
+        <input type="time" name="start_time" value="{{ trip.start_time|time:'H:i' }}">
+
+        <label for="end_time">End Time:</label>
+        <input type="time" name="end_time" value="{{ trip.end_time|time:'H:i' }}">
+
+        <button type="submit">{% if trip %}Update Trip{% else %}Add Trip{% endif %}</button>
+    </form>
+</div>
+
+</body>
+</html>

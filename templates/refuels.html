@@ -1,0 +1,82 @@
+<!-- refuels.html -->
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Refuels</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            display: flex;
+        }
+        .sidebar {
+            width: 250px;
+            background: #2c3e50;
+            color: white;
+            height: 100vh;
+            padding: 20px;
+            position: fixed;
+        }
+        .sidebar a {
+            display: block;
+            color: white;
+            text-decoration: none;
+            padding: 10px;
+            margin: 5px 0;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+        .sidebar a:hover {
+            background: #34495e;
+        }
+        .content {
+            margin-left: 270px;
+            padding: 20px;
+            width: 100%;
+        }
+    </style>
+</head>
+<body>
+    <div class="sidebar">
+        <h2>Navigation</h2>
+        <a href="{% url 'index' %}">Home</a>
+        <a href="{% url 'vehicles' %}">Vehicles</a>
+        <a href="{% url 'drivers' %}">Drivers</a>
+        <a href="{% url 'refuels' %}">Refuels</a>
+        <a href="{% url 'trips' %}">Trips</a>
+    </div>
+    <div class="content">
+        <h1>Refuels</h1>
+        <a href="{% url 'add_refuel' %}" class="add-button">+++</a>
+    {% if refuels %}
+        <table border="1">
+            <tr>
+                <th>ID</th>
+                <th>Vehicle VIN</th>
+                <th>Driver ID</th>
+                <th>Mileage at Refuel</th>
+                <th>Fuel Liters</th>
+                <th>Refuel Date</th>
+            </tr>
+            {% for refuel in refuels %}
+            <tr>
+                <td>{{ refuel.refuel_id }}</td>
+                <td>{{ refuel.vehicle_vin.VIN }}</td>
+                <td>{{ refuel.driver_id.name }} {{ refuel.driver_id.lastname }}</td>
+                <td>{{ refuel.mileage_at_refuel }}</td>
+                <td>{{ refuel.fuel_liters }}</td>
+                <td>{{ refuel.refuel_date }}</td>
+                <td><a href="{% url 'edit_refuel' refuel.refuel_id %}">Edit</a></td>
+            </tr>
+            {% endfor %}
+        </table>
+    {% else %}
+        <p>No refuels available.</p>
+    {% endif %}
+    </div>
+</body>
+</html>

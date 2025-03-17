@@ -1,0 +1,92 @@
+<!-- trips.html -->
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Trips</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            display: flex;
+        }
+        .sidebar {
+            width: 250px;
+            background: #2c3e50;
+            color: white;
+            height: 100vh;
+            padding: 20px;
+            position: fixed;
+        }
+        .sidebar a {
+            display: block;
+            color: white;
+            text-decoration: none;
+            padding: 10px;
+            margin: 5px 0;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+        .sidebar a:hover {
+            background: #34495e;
+        }
+        .content {
+            margin-left: 270px;
+            padding: 20px;
+            width: 100%;
+        }
+    </style>
+</head>
+<body>
+    <div class="sidebar">
+        <h2>Navigation</h2>
+        <a href="{% url 'index' %}">Home</a>
+        <a href="{% url 'vehicles' %}">Vehicles</a>
+        <a href="{% url 'drivers' %}">Drivers</a>
+        <a href="{% url 'refuels' %}">Refuels</a>
+        <a href="{% url 'trips' %}">Trips</a>
+    </div>
+    <div class="content">
+        <h1>Trips</h1>
+        <a href="{% url 'add_trip' %}" class="add-button">+++</a>
+    {% if trips %}
+        <table border="1">
+            <tr>
+                <th>ID</th>
+                <th>Vehicle VIN</th>
+                <th>Driver ID</th>
+                <th>Start Date</th>
+                <th>End Date</th>
+                <th>From</th>
+                <th>To</th>
+                <th>Start Mileage</th>
+                <th>End Mileage</th>
+                <th>Start Time</th>
+                <th>End Time</th>
+            </tr>
+            {% for trip in trips %}
+            <tr>
+                <td>{{ trip.trip_id }}</td>
+                <td>{{ trip.vehicle_vin.VIN }}</td>
+                <td>{{ trip.driver_id.id }}</td>
+                <td>{{ trip.start_date }}</td>
+                <td>{{ trip.end_date }}</td>
+                <td>{{ trip.from_location }}</td>
+                <td>{{ trip.to_location }}</td>
+                <td>{{ trip.start_mileage|default:"-" }}</td>
+                <td>{{ trip.end_mileage|default:"-" }}</td>
+                <td>{{ trip.start_time|default:"-" }}</td>
+                <td>{{ trip.end_time|default:"-" }}</td>
+                <td><a href="{% url 'edit_trip' trip.trip_id %}">Edit</a></td>
+            </tr>
+            {% endfor %}
+        </table>
+    {% else %}
+        <p>No trips available.</p>
+    {% endif %}
+    </div>
+</body>
+</html>

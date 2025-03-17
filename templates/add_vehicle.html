@@ -1,0 +1,70 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% if vehicle %}Edit Vehicle{% else %}Add Vehicle{% endif %}</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 20px;
+        }
+        .container {
+            max-width: 500px;
+            margin: auto;
+            padding: 20px;
+            border-radius: 10px;
+            background: #ecf0f1;
+            box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
+        }
+        .container h2 {
+            text-align: center;
+        }
+        input, button {
+            width: 100%;
+            padding: 8px;
+            margin: 5px 0;
+        }
+        button {
+            background-color: #27ae60;
+            color: white;
+            border: none;
+            cursor: pointer;
+            font-size: 16px;
+            border-radius: 5px;
+        }
+        button:hover {
+            background-color: #219150;
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <h2>{% if vehicle %}Edit Vehicle{% else %}Add a New Vehicle{% endif %}</h2>
+    <form method="POST">
+        {% csrf_token %}
+
+        <label for="VIN">Vehicle VIN:</label>
+        <input type="text" name="VIN" value="{{ vehicle.VIN|default:'' }}" {% if vehicle %}readonly{% endif %} required>
+
+        <label for="vehicle_make_model">Make & Model:</label>
+        <input type="text" name="vehicle_make_model" value="{{ vehicle.vehicle_make_model|default:'' }}" required>
+
+        <label for="body_colour">Body Colour:</label>
+        <input type="text" name="body_colour" value="{{ vehicle.body_colour|default:'' }}" required>
+
+        <label for="plate_number">Plate Number:</label>
+        <input type="text" name="plate_number" value="{{ vehicle.plate_number|default:'' }}" required>
+
+        <label for="registration_cert_number">Registration Certificate:</label>
+        <input type="text" name="registration_cert_number" value="{{ vehicle.registration_cert_number|default:'' }}" required>
+
+        <button type="submit">{% if vehicle %}Update Vehicle{% else %}Add Vehicle{% endif %}</button>
+    </form>
+</div>
+
+</body>
+</html>

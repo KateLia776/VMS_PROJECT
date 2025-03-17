@@ -1,0 +1,79 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% if driver %}Edit Driver{% else %}Add Driver{% endif %}</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 20px;
+        }
+        .container {
+            max-width: 500px;
+            margin: auto;
+            padding: 20px;
+            border-radius: 10px;
+            background: #ecf0f1;
+            box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
+        }
+        .container h2 {
+            text-align: center;
+        }
+        input, button {
+            width: 100%;
+            padding: 8px;
+            margin: 5px 0;
+        }
+        button {
+            background-color: #27ae60;
+            color: white;
+            border: none;
+            cursor: pointer;
+            font-size: 16px;
+            border-radius: 5px;
+        }
+        button:hover {
+            background-color: #219150;
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <h2>{% if driver %}Edit Driver{% else %}Add a New Driver{% endif %}</h2>
+    <form method="POST">
+        {% csrf_token %}
+
+        <label for="name">First Name:</label>
+        <input type="text" name="name" value="{{ driver.name|default:'' }}" required>
+
+        <label for="lastname">Last Name:</label>
+        <input type="text" name="lastname" value="{{ driver.lastname|default:'' }}" required>
+
+        <label for="birthday">Birthday:</label>
+        <input type="date" name="birthday" value="{{ driver.birthday|date:'Y-m-d' }}" required>
+
+        <label for="drivers_license_number">License Number:</label>
+        <input type="text" name="drivers_license_number" value="{{ driver.drivers_license_number|default:'' }}" required>
+
+        <label for="drivers_license_issue_date">License Issue Date:</label>
+        <input type="date" name="drivers_license_issue_date" value="{{ driver.drivers_license_issue_date|date:'Y-m-d' }}" required>
+
+        <label for="drivers_license_expiry_date">License Expiry Date:</label>
+        <input type="date" name="drivers_license_expiry_date" value="{{ driver.drivers_license_expiry_date|date:'Y-m-d' }}" required>
+
+        <label for="employment_date">Employment Date:</label>
+        <input type="date" name="employment_date" value="{{ driver.employment_date|date:'Y-m-d' }}" required>
+
+        <label for="email">Email:</label>
+        <input type="email" name="email" value="{{ driver.email|default:'' }}" required>
+
+        <button type="submit">{% if driver %}Update Driver{% else %}Add Driver{% endif %}</button>
+    </form>
+</div>
+
+</body>
+</html>
