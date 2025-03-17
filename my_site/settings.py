@@ -12,6 +12,10 @@ https://docs.djangoproject.com/en/5.1/ref/settings/
 
 from pathlib import Path
 import os
+from dotenv import load_dotenv
+
+
+load_dotenv('.env')
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -21,12 +25,13 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 # See https://docs.djangoproject.com/en/5.1/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = 'django-insecure-mle=bn*$=2=67o$vvu!*&_a_##q7q8_ra#n7c8zkx2fibcl+ia'
+SECRET_KEY = os.getenv('SECRET_KEY')
+DB_ENV = os.getenv('DB_ENV')
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+DEBUG = os.getenv('DEBUG', True) == 'True'
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = [os.getenv('ALLOWED_HOSTS', '*')]
 
 
 # Application definition
@@ -47,6 +52,7 @@ INSTALLED_APPS = [
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
+    'whitenoise.middleware.WhiteNoiseMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
@@ -79,17 +85,28 @@ WSGI_APPLICATION = 'my_site.wsgi.application'
 # Database
 # https://docs.djangoproject.com/en/5.1/ref/settings/#databases
 
-DATABASES = {
-    'default': {
-        'ENGINE': 'django.db.backends.mysql',
-        'NAME': 'project',  # Имя базы данных
-        'USER': 'django',  # Твой MySQL пользователь
-        'PASSWORD': 'Secret1!',  # Пароль пользователя
-        'HOST': '192.168.52.128',  # IP виртуальной машины
-        'PORT': '3306',  # Порт MySQL
-    }
-}
+DATABASES = {}
 
+if DB_ENV == 'dev':
+    DATABASES['default'] = {
+        'ENGINE': 'django.db.backends.mysql',
+        'NAME': 'project',
+        'USER': 'django',
+        'PASSWORD': 'Secret1!',
+        'HOST': '192.168.52.128',
+        'PORT': '3306',
+    }
+elif DB_ENV == 'prod':
+    DATABASES['default'] = {
+        'ENGINE': 'django.db.backends.mysql',
+        'NAME': os.getenv('DB_NAME'),
+        'USER': os.getenv('DB_USER'),
+        'PASSWORD': os.getenv('DB_PASSWORD'),
+        'HOST': os.getenv('DB_HOST'),
+        'PORT': os.getenv('DB_PORT'),
+    }
+else:
+    raise Exception("DB_ENV must be 'dev' or 'prod'.")
 
 # Password validation
 # https://docs.djangoproject.com/en/5.1/ref/settings/#auth-password-validators
